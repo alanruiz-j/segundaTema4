@@ -20,7 +20,7 @@ def resetear_opengl():
         pygame.display.quit()
         pygame.quit()
 
-def pintar_cosa(x,y,vertices,faces,angle,s,rx,ry,rz,red,green,blue):
+def pintar_cosa(x,y,vertices,faces,angle,s,rx,ry,rz,red,green,blue,ilu=True):
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_COLOR_MATERIAL)
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
@@ -35,11 +35,12 @@ def pintar_cosa(x,y,vertices,faces,angle,s,rx,ry,rz,red,green,blue):
         glTranslatef(-vertices[0][0],-vertices[0][1],-vertices[0][2])
     lc.iluminacion(1,1,1)
     #cl.set_naranja()
-    glColor3f(red, green, blue)
+    if ilu:glColor3f(red, green, blue)
+    else:glColor3f(red/5, green/5, blue/5)
     draw_custom_object(vertices,faces)
     glPopMatrix()
 
-def pintar_esfera(x,y,z,r,angle,rx,ry,rz):
+def pintar_esfera(x,y,z,r,angle,rx,ry,rz,ilu=True):
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_COLOR_MATERIAL)
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
@@ -53,7 +54,8 @@ def pintar_esfera(x,y,z,r,angle,rx,ry,rz):
         glTranslatef(x, y, z)
     lc.iluminacion(1,1,1)
     #cl.set_naranja()
-    glColor3f(1.0, 0.5, 0.0)
+    if ilu:glColor3f(1.0, 0.5, 0.0)
+    else:glColor3f(1.0/5, 0.5/5, 0.0/5)
     draw_sphere(r,40,40)
     glPopMatrix()
 

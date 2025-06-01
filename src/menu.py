@@ -110,7 +110,7 @@ def draw_text(text, font, x, y):
     glPopMatrix()
     glMatrixMode(GL_MODELVIEW)
 
-CHARACTER_POSITIONS = [-13.5, 0, 11.5]
+CHARACTER_POSITIONS = [-13.5, 0, 11.5, 25.0]
 
 def draw_triangle_indicator(x, y, z):
     glPushMatrix()
@@ -135,6 +135,9 @@ def character_select(screen, clock, display_size):
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
+    maid = False
+    toon = False
+    agri = False
     global selected_index
     running = True
 
@@ -149,15 +152,22 @@ def character_select(screen, clock, display_size):
                                                 "ALAN RUIZ JUAREZ - 22281371\n"
                                                 "MONSERRAT GUADALUPE VEGA VILCHIS - 2281374")
                 if event.key == pygame.K_LEFT:
-                    selected_index = (selected_index - 1) % 3
+                    selected_index = (selected_index - 1) % 4
                 elif event.key == pygame.K_RIGHT:
-                    selected_index = (selected_index + 1) % 3
+                    selected_index = (selected_index + 1) % 4
                 elif event.key == pygame.K_RETURN:
                     print(f"Selected character: {selected_index}")
                     running = False  # Proceed to game
                 elif event.key == pygame.K_ESCAPE:
+                    print(f"Selected character: {selected_index}")
                     running = False  # Optionally return to menu
 
+        if selected_index == 1:toon=True
+        else:toon = False
+        if selected_index == 2:maid=True
+        else:maid = False
+        if selected_index == 0:agri=True
+        else:agri = False
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         draw_background()
         glLoadIdentity()
@@ -172,28 +182,28 @@ def character_select(screen, clock, display_size):
         reference_point = [0, 0, 0]
         tra = [12,0,1]
         translation_vector = [11.5, -3, 2]
-        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.vestido1,0.8,reference_point),tra),chucho.carasVestido1,0,0,0,0,0,1.0,0,0.5)
-        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesLArm,0.8,reference_point),tra),chucho.carasLArm,0,0,0,0,1,1.0,0,0.5)
-        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesRArm,0.8,reference_point),tra),chucho.carasRArm,0,1,0,0,1,1.0,0,0.5)
-        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesRLeg,0.8,reference_point),tra),chucho.carasRLeg,0,1,1,0,0,1.0,0,0.5)
-        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesLLeg,0.8,reference_point),tra),chucho.carasLLeg,0,0,1,0,0,1.0,0,0.5)
+        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.vestido1,0.8,reference_point),tra),chucho.carasVestido1,0,0,0,0,0,1.0,0,0.5,maid)
+        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesLArm,0.8,reference_point),tra),chucho.carasLArm,0,0,0,0,1,1.0,0,0.5,maid)
+        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesRArm,0.8,reference_point),tra),chucho.carasRArm,0,1,0,0,1,1.0,0,0.5,maid)
+        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesRLeg,0.8,reference_point),tra),chucho.carasRLeg,0,1,1,0,0,1.0,0,0.5,maid)
+        objects.pintar_cosa(x,y,chucho.translate_matrix(chucho.scale_matrix_relative(chucho.verticesLLeg,0.8,reference_point),tra),chucho.carasLLeg,0,0,1,0,0,1.0,0,0.5,maid)
         objects.draw_line(chucho.translate_matrix(chucho.sonrisa,translation_vector),x,y)
         objects.draw_line(chucho.translate_matrix(chucho.ojo1a,translation_vector),x,y)
         objects.draw_line(chucho.translate_matrix(chucho.ojo2a,translation_vector),x,y)
-        objects.pintar_esfera(12, 12, 1.3,1.5,0,0,0,0)
+        objects.pintar_esfera(12, 12, 1.3,1.5,0,0,0,0,maid)
         
         #toonix
-        
-        toonix.pintar_torso(2-2,0.7,1,0.3, 0.2, 1) #torso
-        toonix.pintar_cabeza(2-2,0.7,1,0.3, 0.2, 1) #cabeza
-        toonix.pintar_frente(2-2,0.7,1,0.992,0.701,0.349) #frente
-        toonix.pintar_esfera(2-2,11.2,1,0.161, 0.161, 0.161) #cabello
-        toonix.pintar_esfera(0-2,3.2,1,0.3, 0.2, 1) #hombro derech
-        toonix.pintar_esfera(4-2,3.2,1,0.3, 0.2, 1) #hombro izquierdo
-        toonix.pintar_extremidad(1-2,1,1   ,0.3,0.2,1) #pierna izquierda
-        toonix.pintar_extremidad(3-2,1,1   ,0.3,0.2,1) #pierna derecha
-        toonix.pintar_extremidad(0-2,2.5,1   ,0.3,0.2,1) #brazo izquierdo
-        toonix.pintar_extremidad(4-2,2.5,1   ,0.3,0.2,1) #brazo derecho 
+        glColor3f(0.3, 0.3, 0.3)
+        toonix.pintar_torso(2-2,0.7,1,0.3, 0.2, 1,toon) #torso
+        toonix.pintar_cabeza(2-2,0.7,1,0.3, 0.2, 1,toon) #cabeza
+        toonix.pintar_frente(2-2,0.7,1,0.992,0.701,0.349,toon) #frente
+        toonix.pintar_esfera(2-2,11.2,1,0.161, 0.161, 0.161,toon) #cabello
+        toonix.pintar_esfera(0-2,3.2,1,0.3, 0.2, 1,toon) #hombro derech
+        toonix.pintar_esfera(4-2,3.2,1,0.3, 0.2, 1,toon) #hombro izquierdo
+        toonix.pintar_extremidad(1-2,1,1   ,0.3,0.2,1,toon) #pierna izquierda
+        toonix.pintar_extremidad(3-2,1,1   ,0.3,0.2,1,toon) #pierna derecha
+        toonix.pintar_extremidad(0-2,2.5,1   ,0.3,0.2,1,toon) #brazo izquierdo
+        toonix.pintar_extremidad(4-2,2.5,1   ,0.3,0.2,1,toon) #brazo derecho 
         objects.draw_line(chucho.translate_matrix(toonix.marca_frente_v,[0, -7, 3]),0,0) #marca de la frente vertical
         objects.draw_line(chucho.translate_matrix(toonix.marca_frente_h,[0, -7, 3]),0,0) #marca de la frente horizontal
         objects.draw_line(chucho.translate_matrix(toonix.marca_frente_v,[-1, -10, 3]),0,0) #ojo izquierdo
@@ -230,7 +240,7 @@ def character_select(screen, clock, display_size):
         agrio.set_posicion_OjoD_1(ojoD_1x, ojoD_1y, ojoD_1z)
         agrio.set_posicion_OjoD_2(ojoD_2x, ojoD_2y, ojoD_2z)
 
-        agrio.agrio()
+        agrio.agrio(agri)
 
         pygame.display.flip()
         clock.tick(60)
