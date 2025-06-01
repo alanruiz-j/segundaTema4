@@ -3,21 +3,22 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from . import pinta as p
+from . import pinta_toonix as p
 from tkinter import messagebox
 from personajes import toonix
 
 # Constantes
 CAMERA_SPEED = 0.6
 MOUSE_SENSITIVITY = 0.1
+MOVE_SPEED = 0.3
 DISPLAY = (1500, 800)
-MIN_X, MAX_X = 11.5, 14.7
 
 # Variables de estado (serán inicializadas en run)
 expresion = 1
 pose = 1
 fondo = 1
 volumen = True
+cube_pos = [11.5, 0.5, 1.5]
 
 # Diccionarios para mapeo de teclas
 expresiones_keys = {K_r: 1, K_t: 2, K_y: 3, K_u: 4, K_i: 5, K_8: 6, K_9: 7}
@@ -34,7 +35,7 @@ fondos_keys = {
 
 # Funciones auxiliares
 def manejar_input():
-    global expresion, pose, fondo, volumen
+    global expresion, pose, fondo, volumen, cube_pos
     for event in pygame.event.get():
         if event.type == QUIT or (event.type == KEYDOWN and event.key in [K_ESCAPE, K_RETURN]):
             toonix.sonidoOff()
@@ -49,6 +50,7 @@ def manejar_input():
     keys = pygame.key.get_pressed()
     mover_camara(keys)
     actualizar_estado(keys)
+    mover_personaje(keys)
     mostrar_mensajes(keys)
     return True
 
@@ -72,11 +74,23 @@ def actualizar_estado(keys):
             if volumen:
                 toonix.sonidoOn(sound)
 
+def mover_personaje(keys):
+    global cube_pos
+    if keys[K_LEFT]:
+        cube_pos[0] -= MOVE_SPEED
+    if keys[K_RIGHT]:
+        cube_pos[0] += MOVE_SPEED
+    if keys[K_DOWN]:
+        cube_pos[2] -= MOVE_SPEED
+    if keys[K_UP]:
+        cube_pos[2] += MOVE_SPEED
+
 def mostrar_mensajes(keys):
     if keys[K_F1]:
         messagebox.showinfo("Instrucciones", 
             "Mover cámara: W,A,S,D\n" +
             "Rotar vista: Ratón\n\n" +
+            "Mover personaje: Flechas\n" +
             "POSES: F=1, G=2, H=3, J=4, K=5, L=6, 0=7\n" +
             "EXPRESIONES: R=1, T=2, Y=3, U=4, I=5, 8=6, 9=7\n" +
             "ESCENARIOS: 1 a 7\n" +
@@ -93,54 +107,10 @@ def controlar_mouse():
 
 def renderizar():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    toonix.text("Instrucciones",-5,10,-4,40,255,255,255, 0,0,0)
-    # Personaje (poses)
-    if pose == 1:
-        p.pintar_extremidad(1, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad(3, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad(0, 2.5, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad(4, 2.5, 1, 0.3, 0.2, 1)
-    elif pose == 2:
-        p.pintar_extremidad(1, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad(3, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad_der_arriba(-0.3, 1.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad(4, 2.5, 1, 0.3, 0.2, 1)
-    elif pose == 3:
-        p.pintar_extremidad(1, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad(3, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad(0, 2.5, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad_izq_arriba(2.3, 1.7, 0.6, 0.3, 0.2, 1)
-    elif pose == 4:
-        p.pintar_extremidad_izq_arriba(0.2, 0.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad(3, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad_der_arriba(-0.3, 1.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad(4, 2.5, 1, 0.3, 0.2, 1)
-    elif pose == 5:
-        p.pintar_extremidad_izq_arriba(0.2, 0.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad_der_arriba(2, 0.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad_der_arriba(-0.3, 1.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad_izq_arriba(2.3, 1.7, 0.6, 0.3, 0.2, 1)
-    elif pose == 6:
-        p.pintar_extremidad(1, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad(3, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad_der_arriba(-0.3, 1.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad_izq_arriba(2.3, 1.7, 0.6, 0.3, 0.2, 1)
-    elif pose == 7:
-        p.pintar_extremidad(1, 1, 1, 0.3, 0.2, 1)
-        p.pintar_extremidad_der_arriba(2, 0.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad_der_arriba(-0.3, 1.7, 0.6, 0.3, 0.2, 1)
-        p.pintar_extremidad_izq_arriba(2.3, 1.7, 0.6, 0.3, 0.2, 1)
+    # Dibujar texto en pantalla (instrucciones)
+    toonix.text("Instrucciones", -5, 10, -4, 40, 255, 255, 255, 0, 0, 0)
 
-    p.pintar_torso(2, 0.7, 1, 0.3, 0.2, 1)
-    p.marca_torso(2, 3.4, 0.4, 0.992, 0.701, 0.349)
-    p.pintar_cabeza(2, 0.7, 1, 0.3, 0.2, 1)
-    p.pintar_frente(2, 0.7, 1, 0.992, 0.701, 0.349)
-    p.marca_frente(1.75, 10, -0.55, 0, 0, 0)
-    p.pintar_esfera(2, 11.2, 1, 0.161, 0.161, 0.161)
-    p.pintar_esfera(0, 3.2, 1, 0.3, 0.2, 1)
-    p.pintar_esfera(4, 3.2, 1, 0.3, 0.2, 1)
-
-    # Escenario
+    # Dibujar escenario (no se mueve con personaje)
     if fondo == 1:
         toonix.drawEscenario("images/toonix_fondo1.jpg")
         toonix.drawPiso("images/toonix_suelo1.jpg")
@@ -162,43 +132,101 @@ def renderizar():
     elif fondo == 7:
         toonix.drawEscenario("images/toonix_fondo7.jpg")
         toonix.drawPiso("images/toonix_suelo7.jpg")
+
+    # Dibujar personaje centrado en cube_pos
+    glPushMatrix()
     
+    #cubos
+    p.pintar_colision(11, 3, -2, 1, 0, 1)
+    p.pintar_colision(-11, 3, -2, 0, 1, 1)
+    
+    glTranslatef(cube_pos[0], cube_pos[1], cube_pos[2])
+    # Personaje (poses)
+    #cara
     if expresion == 1: #normal
-        p.pintar_ojo_normal(1,6.5,-0.55,0,0,0) #ojo izquierdo
-        p.pintar_ojo_normal(2.5,6.5,-0.55,0,0,0) #ojo derecho
-        p.pintar_boca_normal(1.7,5.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_ojo_normal(-12.3,6.5,-0.55,0,0,0) #ojo izquierdo
+        p.pintar_ojo_normal(-10,6.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_boca_normal(-11.2,5.5,-0.55,0,0,0) #ojo derecho
     elif expresion == 2: #feliz
-        p.pintar_ojo_feliz(1,6.5,-0.55,0,0,0) #ojo izquierdo
-        p.pintar_ojo_feliz(2.5,6.5,-0.55,0,0,0) #ojo derecho
-        p.pintar_boca_feliz(1.7,5.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_ojo_feliz(-12.3,6.5,-0.55,0,0,0) #ojo izquierdo
+        p.pintar_ojo_feliz(-10,6.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_boca_feliz(-11.2,5.5,-0.55,0,0,0) #ojo derecho
     elif expresion == 3: #triste
-        p.pintar_ojo_triste(1,6.5,-0.55,0,0,0) #ojo izquierdo
-        p.pintar_ojo_triste(2.5,6.5,-0.55,0,0,0) #ojo derecho
-        p.pintar_boca_triste(1.7,5.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_ojo_triste(-12.3,6.5,-0.55,0,0,0) #ojo izquierdo
+        p.pintar_ojo_triste(-10,6.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_boca_triste(-11.2,5.5,-0.55,0,0,0) #ojo derecho
     elif expresion == 4: #enojado
-        p.pintar_ojo_enojado1(1,6.5,-0.55,0,0,0) #ojo izquierdo
-        p.pintar_ojo_enojado2(2.5,6.5,-0.55,0,0,0) #ojo derecho
-        p.pintar_boca_enojado(1.7,5.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_ojo_enojado1(-12.3,6.5,-0.55,0,0,0) #ojo izquierdo
+        p.pintar_ojo_enojado2(-10,6.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_boca_enojado(-11.2,5.5,-0.55,0,0,0) #ojo derecho
     elif expresion == 5: #sorprendido
-        p.pintar_ojo_normal(1,6.5,-0.55,0,0,0) #ojo izquierdo
-        p.pintar_ojo_normal(2.5,6.5,-0.55,0,0,0) #ojo derecho
-        p.pintar_boca_sorprendido(1.7,5.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_ojo_normal(-12.3,6.5,-0.55,0,0,0) #ojo izquierdo
+        p.pintar_ojo_normal(-10,6.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_boca_sorprendido(-11.2,5.5,-0.55,0,0,0) #ojo derecho
     elif expresion == 6: #guiño
-        p.pintar_ojo_normal(1,6.5,-0.55,0,0,0) #ojo izquierdo
-        p.pintar_ojo_feliz(2.5,6.5,-0.55,0,0,0) #ojo derecho
-        p.pintar_boca_feliz(1.7,5.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_ojo_normal(-12.3,6.5,-0.55,0,0,0) #ojo izquierdo
+        p.pintar_ojo_feliz(-10,6.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_boca_feliz(-11.2,5.5,-0.55,0,0,0) #ojo derecho
     elif expresion == 7: #muerto
-        p.pintar_ojo_muerto(1,6.5,-0.55,0,0,0) #ojo izquierdo
-        p.pintar_ojo_muerto(2.5,6.5,-0.55,0,0,0) #ojo derecho
-        p.pintar_boca_sorprendido(1.7,5.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_ojo_muerto(-12.3,6.5,-0.55,0,0,0) #ojo izquierdo
+        p.pintar_ojo_muerto(-10,6.5,-0.55,0,0,0) #ojo derecho
+        p.pintar_boca_sorprendido(-11.2,5.5,-0.55,0,0,0) #ojo derecho
+    
+    if pose == 1:
+        p.pintar_extremidad(-12, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad(-10, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad(-13, 2.5, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad(-9, 2.5, 1, 0.3, 0.2, 1)
+    elif pose == 2:
+        p.pintar_extremidad(-12, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad(-10, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad_der_arriba(-6.8, 1.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad(-9, 2.5, 1, 0.3, 0.2, 1)
+    elif pose == 3:
+        p.pintar_extremidad(-12, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad(-10, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad(-13, 2.5, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad_izq_arriba(-4.2, 1.7, 0.6, 0.3, 0.2, 1)
+    elif pose == 4:
+        p.pintar_extremidad_izq_arriba(-6.3, 0.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad(-10, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad_der_arriba(-6.8, 1.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad(-9, 2.5, 1, 0.3, 0.2, 1)
+    elif pose == 5:
+        p.pintar_extremidad_izq_arriba(-6.3, 0.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad_der_arriba(-4.5, 0.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad_der_arriba(-6.8, 1.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad_izq_arriba(-4.2, 1.7, 0.6, 0.3, 0.2, 1)
+    elif pose == 6:
+        p.pintar_extremidad(-12, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad(-10, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad_der_arriba(-6.8, 1.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad_izq_arriba(-4.2, 1.7, 0.6, 0.3, 0.2, 1)
+    elif pose == 7:
+        p.pintar_extremidad(-12, 1, 1, 0.3, 0.2, 1)
+        p.pintar_extremidad_der_arriba(-4.5, 0.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad_der_arriba(-6.8, 1.7, 0.6, 0.3, 0.2, 1)
+        p.pintar_extremidad_izq_arriba(-4.2, 1.7, 0.6, 0.3, 0.2, 1)
+
+    p.pintar_torso(-11, 0.7, 1, 0.3, 0.2, 1)
+    p.marca_torso(-11, 3.4, 0.4, 0.992, 0.701, 0.349)
+    p.pintar_cabeza(-11, 0.7, 1, 0.3, 0.2, 1)
+    p.pintar_frente(-11, 0.7, 1, 0.992, 0.701, 0.349)
+    p.marca_frente(-11.25, 10, -0.55, 0, 0, 0)
+    p.pintar_esfera(-11, 11.2, 1, 0.161, 0.161, 0.161)
+    p.pintar_esfera(-13, 3.2, 1, 0.3, 0.2, 1)
+    p.pintar_esfera(-9, 3.2, 1, 0.3, 0.2, 1)
+
+    glPopMatrix()
 
 def run():
-    global expresion, pose, fondo, volumen
+    global expresion, pose, fondo, volumen, cube_pos
     # Reiniciar estado al iniciar
     expresion = 1
     pose = 1
     fondo = 1
     volumen = True
+    cube_pos = [11.5, 0.5, 1.5]
 
     # Inicialización
     pygame.init()

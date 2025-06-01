@@ -53,6 +53,15 @@ def pintar_torso(posx,posy,posz,r,g,b):
     toonix.draw_cube(-1.5,1.5,-0.5,0.5,1,3.5)
     glPopMatrix()
 
+def pintar_colision(posx,posy,posz,r,g,b):
+    glEnable(GL_DEPTH_TEST)
+    glPushMatrix()
+    glTranslate(posx,posy,posz)
+    iluminacion(0,0,0)
+    setColor([r,g,b,1],[r,g,b,1],[0.0,0.0,0.0,1],30)
+    toonix.draw_cube(0,2,0,2,0,2)
+    glPopMatrix()
+
 def marca_torso(posx,posy,posz,r,g,b):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
