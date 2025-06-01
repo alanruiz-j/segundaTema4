@@ -13,6 +13,22 @@ MOUSE_SENSITIVITY = 0.1
 MOVE_SPEED = 0.3
 DISPLAY = (1500, 800)
 
+correct_sfx     = pygame.mixer.Sound("sonidos/correct.wav")
+incorrect_sfx   = pygame.mixer.Sound("sonidos/incorrect.wav")
+
+#textos
+instrucciones_texto = [
+    "Mover cámara: W,A,S,D",
+    "Rotar vista: Ratón",
+    "Mover personaje: Flechas",
+    "POSES: F=1, G=2, H=3, J=4, K=5, L=6, 0=7",
+    "EXPRESIONES: R=1, T=2, Y=3, U=4, I=5, 8=6, 9=7",
+    "ESCENARIOS: 1 a 7",
+    "Encender sonido: P",
+    "Apagar sonido: O",
+    "Desarrollador: F2"
+]
+
 # Variables de estado (serán inicializadas en run)
 expresion = 1
 pose = 1
@@ -86,15 +102,6 @@ def mover_personaje(keys):
         cube_pos[2] += MOVE_SPEED
 
 def mostrar_mensajes(keys):
-    if keys[K_F1]:
-        messagebox.showinfo("Instrucciones", 
-            "Mover cámara: W,A,S,D\n" +
-            "Rotar vista: Ratón\n\n" +
-            "Mover personaje: Flechas\n" +
-            "POSES: F=1, G=2, H=3, J=4, K=5, L=6, 0=7\n" +
-            "EXPRESIONES: R=1, T=2, Y=3, U=4, I=5, 8=6, 9=7\n" +
-            "ESCENARIOS: 1 a 7\n" +
-            "Encender sonido: P\nApagar sonido: O\nInstrucciones: F1\nDesarrollador: F2")
     if keys[K_F2]:
         messagebox.showinfo("", "Programa creado por Alan Ruiz Juárez")
 
@@ -108,7 +115,9 @@ def controlar_mouse():
 def renderizar():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     # Dibujar texto en pantalla (instrucciones)
-    toonix.text("Instrucciones", -5, 10, -4, 40, 255, 255, 255, 0, 0, 0)
+    toonix.text("Instrucciones:", 0, 13 + 4 * 1.5, 15, 40, 255, 255, 255, 0, 0, 0)
+    for i, texto in enumerate(instrucciones_texto):
+        toonix.text(texto, 0, 22 - (i+4) * 1.5, 15, 40, 255, 255, 255, 0, 0, 0)
 
     # Dibujar escenario (no se mueve con personaje)
     if fondo == 1:
@@ -245,6 +254,12 @@ def run():
     while running:
         running = manejar_input()
         controlar_mouse()
+        if (cube_pos[0] < 4.6 and cube_pos[0] > -3.2 and cube_pos[2] < 0.6 and cube_pos[2] > -4.5):
+            correct_sfx.play()
+            cube_pos = [11.5, 0.5, 1.5]
+        if (cube_pos[0] < 26.2 and cube_pos[0] > 19.6 and cube_pos[2] < 0.6 and cube_pos[2] > -4.5):
+            incorrect_sfx.play()
+            cube_pos = [11.5, 0.5, 1.5]
         renderizar()
         pygame.display.flip()
         pygame.time.wait(10)
