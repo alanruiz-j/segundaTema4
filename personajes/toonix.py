@@ -8,19 +8,21 @@ from PIL import Image
 
 #personaje
 
-def pintar_cabeza(posx,posy,posz,r,g,b):
+def pintar_cabeza(posx,posy,posz,r,g,b,ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(posx,posy,posz)    
-    setColor(r,g,b)
+    if ilu:setColor(r,g,b)
+    else: setColor2(r,g,b)
     draw_cube(2,-2,-1.5,1.5,3.5,7.5)
     glPopMatrix()
 
-def pintar_frente(posx,posy,posz,r,g,b):
+def pintar_frente(posx,posy,posz,r,g,b,ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(posx,posy,posz)
-    setColor(r,g,b)
+    if ilu:setColor(r,g,b)
+    else: setColor2(r,g,b)
     draw_cube(2,-2,-1.5,1.5,7.5,10.5)
     glPopMatrix()
 
@@ -33,11 +35,12 @@ def pintar_marca_frente(posx,posy,posz,r,g,b):
     draw_line(0.25,0.25,0.25,-0.25,1,4)
     glPopMatrix()
 
-def pintar_torso(posx,posy,posz,r,g,b):
+def pintar_torso(posx,posy,posz,r,g,b,ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(posx,posy,posz)
-    setColor(r,g,b)
+    if ilu:setColor(r,g,b)
+    else: setColor2(r,g,b)
     draw_cube(-1.5,1.5,-0.5,0.5,1,3.5)
     glPopMatrix()
 
@@ -51,19 +54,21 @@ def pintar_marca_torso(posx,posy,posz,r,g,b):
     draw_line(0.1,-0.4,-0.3,-0.8,1,7)
     glPopMatrix()
 
-def pintar_extremidad(posx,posy,posz,r,g,b):
+def pintar_extremidad(posx,posy,posz,r,g,b,ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(posx,posy,posz)
-    setColor(r,g,b)
+    if ilu:setColor(r,g,b)
+    else: setColor2(r,g,b)
     draw_cylinder(0.5,1.5,50)
     glPopMatrix()
 
-def pintar_esfera(posx,posy,posz,r,g,b):
+def pintar_esfera(posx,posy,posz,r,g,b,ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(posx,posy,posz)
-    setColor(r,g,b)
+    if ilu:setColor(r,g,b)
+    else: setColor2(r,g,b)
     draw_sphere(0.5,50,50)
     glPopMatrix()
 
@@ -106,6 +111,8 @@ marca_torso = [
 
 def setColor(r,g,b):
     glColor3f(r,g,b)
+def setColor2(r,g,b):
+    glColor3f(r/5,g/5,b/5)
 
 def draw_cube(x_min, x_max, y_min, y_max, z_min, z_max):
     # Definir los 8 vértices del cubo

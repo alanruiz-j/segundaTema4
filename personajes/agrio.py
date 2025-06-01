@@ -6,14 +6,14 @@ from actions import objects as obj
 angulo_brazo = 0
 angulo_brazo2 = 0
 
-def agrio():
+def agrio(ilu=True):
     ojoD_1()
     ojoD_2()
-    pinEsferaCuer()
-    pinBrazoD()
-    pinBrazoI()
-    pinPieD()
-    pinPieI()
+    pinEsferaCuer(ilu)
+    pinBrazoD(ilu)
+    pinBrazoI(ilu)
+    pinPieD(ilu)
+    pinPieI(ilu)
     ojoI()
     ojoI_1()
     ojoI_2()
@@ -23,11 +23,12 @@ def agrio():
 def set_posicion_esfera(x, y, z):
     global esfera_x, esfera_y, esfera_z
     esfera_x, esfera_y, esfera_z = x, y, z
-def pinEsferaCuer():
+def pinEsferaCuer(ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(esfera_x, esfera_y, esfera_z)  
-    glColor3f(0.0, 1.0, 0.0)
+    if ilu:glColor3f(0.0, 1.0, 0.0)
+    else:glColor3f(0.0/5, 1.0/5, 0.0/5)
     obj.draw_sphere(4.2, 40, 40)
     glPopMatrix()
 
@@ -37,13 +38,14 @@ def set_posicion_BrazoI(x, y, z):
 def set_angulo_brazo(angulo):
     global angulo_brazo
     angulo_brazo = angulo
-def pinBrazoI():
+def pinBrazoI(ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(bI_x, bI_y, bI_z)  
     glRotatef(angulo_brazo, 0, 0, 1)  
     glTranslate(0, -1, 0)  
-    glColor3f(0.0, 1.0, 0.0)
+    if ilu:glColor3f(0.0, 1.0, 0.0)
+    else:glColor3f(0.0/5, 1.0/5, 0.0/5)
     obj.draw_cylinderM(0.4, 1.5, 40)  
     glPopMatrix()
 
@@ -54,35 +56,38 @@ def set_posicion_BrazoD(x, y, z):
 def set_angulo_brazo2(angulo2):
     global angulo_brazo2
     angulo_brazo2 = angulo2
-def pinBrazoD():
+def pinBrazoD(ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(bD_x, bD_y, bD_z)  
     glRotatef(-angulo_brazo2, 0, 0, 1)  
     glTranslate(0, -1, 0)  
-    glColor3f(0.0, 1.0, 0.0)
+    if ilu:glColor3f(0.0, 1.0, 0.0)
+    else:glColor3f(0.0/5, 1.0/5, 0.0/5)
     obj.draw_cylinderM(0.4, 1.5, 40)  
     glPopMatrix()
 
 def set_posicion_PieD(x, y, z):
     global pD_x, pD_y, pD_z
     pD_x, pD_y, pD_z = x, y, z
-def pinPieD():
+def pinPieD(ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(pD_x, pD_y, pD_z)
-    glColor3f(0.0, 1.0, 0.0)
+    if ilu:glColor3f(0.0, 1.0, 0.0)
+    else:glColor3f(0.0/5, 1.0/5, 0.0/5)
     obj.draw_cylinder(0.4,1,40)
     glPopMatrix()
 
 def set_posicion_PieI(x, y, z):
     global iD_x, iD_y, iD_z
     iD_x, iD_y, iD_z = x, y, z
-def pinPieI():
+def pinPieI(ilu=True):
     glEnable(GL_DEPTH_TEST)
     glPushMatrix()
     glTranslate(iD_x, iD_y, iD_z)
-    glColor3f(0.0, 1.0, 0.0)
+    if ilu:glColor3f(0.0, 1.0, 0.0)
+    else:glColor3f(0.0/5, 1.0/5, 0.0/5)
     obj.draw_cylinder(0.4,1,40)
     glPopMatrix()
 
