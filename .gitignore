@@ -195,3 +195,13 @@ cython_debug/
 .cursorindexingignore
 /src/__pycache__
 *.pyc
+actions/__pycache__/luces.cpython-313.pyc
+actions/__pycache__/objects.cpython-313.pyc
+personajes/__pycache__/agrio.cpython-313.pyc
+personajes/__pycache__/chucho.cpython-313.pyc
+personajes/__pycache__/toonix.cpython-313.pyc
+src/__pycache__/hito.cpython-313.pyc
+src/__pycache__/lvl1.cpython-313.pyc
+src/__pycache__/lvl2.cpython-313.pyc
+src/__pycache__/lvl3.cpython-313.pyc
+src/__pycache__/menu.cpython-313.pyc
