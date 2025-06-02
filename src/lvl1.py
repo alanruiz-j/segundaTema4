@@ -3,7 +3,7 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from . import pinta_agrio as p
+from src import pinta_agrio as p
 from actions import sonido as sonido
 from tkinter import messagebox
 from actions import escenario as esc
@@ -51,13 +51,14 @@ def run():
     scene = 1 
 
     colision1 = False
-    colision2 = False 
+    colision2 = False
+    colision3 = False # Nueva variable para la tercera colisión
 
     pygame.mouse.set_visible(True)
     pygame.event.set_grab(False)
 
     pColision_posX = -7 
-    pColision_posY = 0  
+    pColision_posY = 0
     pColision_posZ = -7 - 5 - 3 
 
     pColision_col_width = 2.0
@@ -65,13 +66,21 @@ def run():
     pColision_col_depth = 2.0
 
     
-    obj1_posX = 20 # Posición base (X)
-    obj1_posY = 0  # Posición base (Y)
-    obj1_posZ = 0  # Posición base (Z)
-    # Dimensiones reales del Cubo (AABB)
+    obj1_posX = 20 
+    obj1_posY = 0
+    obj1_posZ = 0 
+    
     cubo_col_width = 3.0
     cubo_col_height = 3.0
     cubo_col_depth = 3.0
+
+
+    obj2_posX = -5 # 
+    obj2_posY = 0 
+    obj2_posZ = -10
+    cubo2_col_width = 2.5
+    cubo2_col_height = 2.5
+    cubo2_col_depth = 2.5
 
 
     esfera_radio = 2.0 
@@ -107,39 +116,41 @@ def run():
         glDisable(GL_LIGHT0)
         glPopMatrix()
 
-    def Esfera(): 
+    def Cubo2(): # Nueva función para dibujar el segundo cubo
         glEnable(GL_DEPTH_TEST)
         glPushMatrix()
-        glTranslatef(esfera_x, esfera_y, esfera_z)
-        if colision2: 
-            glColor3f(0.9, 0.2, 0.2)
+        glTranslatef(obj2_posX, obj2_posY, obj2_posZ)
+        glTranslatef(0, 3.5, 4)
+        if colision3:
+            glColor3f(0.2, 0.9, 0.2) # Otro color para la colisión
         else:
-            glColor3f(0.2, 0.9, 0.7)
-            #lc.iluminacion(0.2, 0.9, 0.7)
-        obj.draw_sphere(esfera_radio, 40, 40) 
+            glColor3f(0.8, 0.7, 0.7)
+        obj.draw_cube()
         glDisable(GL_LIGHTING)
         glDisable(GL_LIGHT0)
         glPopMatrix()
 
+    # Se elimina la función Esfera() ya que no se usará para la colisión
 
-    # messagebox.showinfo("Instrucciones",
-    #                     "F1 - Mostrar instrucciones\n"
-    #                     "F2 - Encender sonido\n"
-    #                     "F3 - Apagar sonido\n"
-    #                     "F4 - Acerca de quien lo desarrollo\n"
-    #                     "ESCAPE - Salir\n"
-    #                     "Movimiento:\n"
-    #                     "W/A/S/D - Mover cámara\n"
-    #                     "Ratón - Rotar vista\n"
-    #                     "1 al 7 - Cambiar escenario/Sonidos/Emociones\n"
-    #                     "Acciones del personaje:\n"
-    #                     "B - Levanta brazo izquierdo\n"
-    #                     "I - Levanta brazo derecho\n"
-    #                     "SPACE - Salto\n"
-    #                     "← - Derecha\n"
-    #                     "→ - Izquierda\n"
-    #                     "↑ - Sube \n" 
-    #                     "↓ - Baja \n")
+
+    messagebox.showinfo("Instrucciones",
+                         "F1 - Mostrar instrucciones\n"
+                         "F2 - Encender sonido\n"
+                         "F3 - Apagar sonido\n"
+                         "F4 - Acerca de quien lo desarrollo\n"
+                         "ESCAPE - Salir\n"
+                         "Movimiento:\n"
+                         "W/A/S/D - Mover cámara\n"
+                         "Ratón - Rotar vista\n"
+                         "1 al 7 - Cambiar escenario/Sonidos/Emociones\n"
+                         "Acciones del personaje:\n"
+                         "B - Levanta brazo izquierdo\n"
+                         "I - Levanta brazo derecho\n"
+                         "SPACE - Salto\n"
+                         "← - Derecha\n"
+                         "→ - Izquierda\n"
+                         "↑ - Sube \n" 
+                         "↓ - Baja \n")
 
     
     while True:
@@ -149,8 +160,7 @@ def run():
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
+                    return "menu"
                 
                 if event.key == pygame.K_1:
                     scene = 1
@@ -261,23 +271,23 @@ def run():
         
         if key[pygame.K_F1]:
             messagebox.showinfo("Instrucciones",
-                                "F1 - Mostrar instrucciones\n"
-                                "F2 - Encender sonido\n"
-                                "F3 - Apagar sonido\n"
-                                "F4 - Acerca de quien lo desarrollo\n"
-                                "ESCAPE - Salir\n"
-                                "Movimiento:\n"
-                                "W/A/S/D - Mover cámara\n"
-                                "Ratón - Rotar vista\n"
-                                "1 al 7 - Cambiar escenario/Sonidos/Emociones\n"
-                                "Acciones del personaje:\n"
-                                "B - Levanta brazo izquierdo\n"
-                                "I - Levanta brazo derecho\n"
-                                "SPACE - Salto\n"
-                                "← - Derecha\n"
-                                "→ - Izquierda\n"
-                                "↑ - Sube (personaje)\n"
-                                "↓ - Baja (personaje)\n")
+                                 "F1 - Mostrar instrucciones\n"
+                                 "F2 - Encender sonido\n"
+                                 "F3 - Apagar sonido\n"
+                                 "F4 - Acerca de quien lo desarrollo\n"
+                                 "ESCAPE - Salir\n"
+                                 "Movimiento:\n"
+                                 "W/A/S/D - Mover cámara\n"
+                                 "Ratón - Rotar vista\n"
+                                 "1 al 7 - Cambiar escenario/Sonidos/Emociones\n"
+                                 "Acciones del personaje:\n"
+                                 "B - Levanta brazo izquierdo\n"
+                                 "I - Levanta brazo derecho\n"
+                                 "SPACE - Salto\n"
+                                 "← - Derecha\n"
+                                 "→ - Izquierda\n"
+                                 "↑ - Sube (personaje)\n"
+                                 "↓ - Baja (personaje)\n")
         if key[pygame.K_F2]:
             sonido.sonidoOn("sonidos/cancion.wav")
         if key[pygame.K_F3]:
@@ -289,7 +299,7 @@ def run():
         
         if key[pygame.K_1]:
             print("Emoción actual:", emocion_actual)
-            emocion_actual = 'feliz'  
+            emocion_actual = 'feliz'
             sonido.sonidoOn("sonidos/candy.wav")
         if key[pygame.K_2]:
             emocion_actual = 'enojo'
@@ -403,6 +413,10 @@ def run():
         cubo_centro_y = obj1_posY + 3.5
         cubo_centro_z = obj1_posZ + 4.0
 
+        # Centro del segundo cubo
+        cubo2_centro_x = obj2_posX
+        cubo2_centro_y = obj2_posY + 3.5
+        cubo2_centro_z = obj2_posZ + 4.0
         
         pColision_centro_x = pColision_posX
         pColision_centro_y = pColision_posY
@@ -416,20 +430,22 @@ def run():
             cubo_col_width, cubo_col_height, cubo_col_depth
         )
 
-        colision2 = coli.aabbCollision(
+        
+        colision3 = coli.aabbCollision(
             esfera_centro_x, esfera_centro_y, esfera_centro_z,
             esfera_col_width, esfera_col_height, esfera_col_depth,
-            pColision_centro_x, pColision_centro_y, pColision_centro_z,
-            pColision_col_width, pColision_col_height, pColision_col_depth
+            cubo2_centro_x, cubo2_centro_y, cubo2_centro_z,
+            cubo2_col_width, cubo2_col_height, cubo2_col_depth
         )
 
         
-        if colision1 or colision2: 
+        if colision1 or colision3: # Se verifica la colisión con ambos cubos
             txt.draw_text("C O L I S I O N", -5, 15, 4, 20, 255, 255, 255, 0, 0, 0)
             
 
         Colision() 
-        Cubo()     
-        Esfera()   
+        Cubo()
+        Cubo2() 
 
         pygame.display.flip()
+    return "menu"
